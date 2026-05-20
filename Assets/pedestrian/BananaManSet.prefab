@@ -1,0 +1,475 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &449858319430227408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2931097140625654266}
+  - component: {fileID: 3105631265457386509}
+  m_Layer: 0
+  m_Name: BananaManSet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2931097140625654266
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449858319430227408}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 871.295, y: 16.94764, z: 445.89786}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3774016468969642899}
+  - {fileID: 6687518728380419319}
+  - {fileID: 7809835624161330099}
+  - {fileID: 3865604241768851415}
+  - {fileID: 8050913710262119665}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3105631265457386509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449858319430227408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69cf0d50f7b0a2a45876126f0ad385a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BananaManSet
+  setId: 0
+  moveDirection: 0
+  moveDistance: 100
+  moveSpeed: 3
+--- !u!1 &8111152614372105750
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3774016468969642899}
+  - component: {fileID: 7453841234272938706}
+  - component: {fileID: 1622300260091449896}
+  m_Layer: 0
+  m_Name: Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3774016468969642899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111152614372105750}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2931097140625654266}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7453841234272938706
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111152614372105750}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 10, y: 10, z: 1}
+  m_Center: {x: -5, y: 0, z: 0}
+--- !u!114 &1622300260091449896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8111152614372105750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfa99d20df3042448a2d971acc2659ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Trigger
+  setId: 0
+  targetObjectNumbers: 01000000
+--- !u!1001 &3616350844378497084
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2931097140625654266}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_Name
+      value: Banana Man (2)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3139582161534381644}
+  m_SourcePrefab: {fileID: 100100000, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+--- !u!4 &3865604241768851415 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 3616350844378497084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4534757859037052269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 3616350844378497084}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3139582161534381644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4534757859037052269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d969fbfa6fa70944696038fcf24774e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pedestrian
+  objectNumber: 3
+  setId: 0
+  moveDirection: 0
+  moveDistance: 10
+  moveSpeed: 3
+  setTransform: {fileID: 0}
+--- !u!1001 &6576504108304198428
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2931097140625654266}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_Name
+      value: Banana Man
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5919848969660160382}
+  m_SourcePrefab: {fileID: 100100000, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+--- !u!1 &6306453954449593933 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 6576504108304198428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5919848969660160382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6306453954449593933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d969fbfa6fa70944696038fcf24774e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pedestrian
+  objectNumber: 1
+  setId: 0
+  moveDirection: 0
+  moveDistance: 10
+  moveSpeed: 3
+  setTransform: {fileID: 0}
+--- !u!4 &6687518728380419319 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 6576504108304198428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7507551295272880922
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2931097140625654266}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_Name
+      value: Banana Man (3)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4378340336134990745}
+  m_SourcePrefab: {fileID: 100100000, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+--- !u!1 &7273673976609420875 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 7507551295272880922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4378340336134990745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7273673976609420875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d969fbfa6fa70944696038fcf24774e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pedestrian
+  objectNumber: 4
+  setId: 0
+  moveDirection: 0
+  moveDistance: 10
+  moveSpeed: 3
+  setTransform: {fileID: 0}
+--- !u!4 &8050913710262119665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 7507551295272880922}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7775646598237693016
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2931097140625654266}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      propertyPath: m_Name
+      value: Banana Man (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1623821336721996198}
+  m_SourcePrefab: {fileID: 100100000, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+--- !u!1 &7433697732057078025 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 7775646598237693016}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1623821336721996198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7433697732057078025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d969fbfa6fa70944696038fcf24774e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pedestrian
+  objectNumber: 2
+  setId: 0
+  moveDirection: 0
+  moveDistance: 10
+  moveSpeed: 3
+  setTransform: {fileID: 0}
+--- !u!4 &7809835624161330099 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4fcd0957e12dc7948b0af7e86c6ed754, type: 3}
+  m_PrefabInstance: {fileID: 7775646598237693016}
+  m_PrefabAsset: {fileID: 0}
