@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
-using Unity.InferenceEngine; // 💡 정확한 최신 네임스페이스 적용
+using Unity.InferenceEngine;
 
 public struct DetectedObject
 {
@@ -17,13 +17,12 @@ public class YoloParser
         int numClasses = outputTensor.shape[1] - 4;
         int numBoxes = outputTensor.shape[2];
 
-        // InferenceEngine 최신 문법
         outputTensor.CompleteAllPendingOperations();
         ReadOnlySpan<float> tensorData = outputTensor.AsReadOnlySpan();
 
         List<DetectedObject> candidates = new List<DetectedObject>();
 
-        // [C-1] 노이즈 필터링
+        //가능성 임계점 보다 낮은 박스들 제거
         for (int i = 0; i < numBoxes; i++)
         {
             float maxConf = 0f;
@@ -58,12 +57,12 @@ public class YoloParser
             }
         }
 
-        // [C-2] 확률 내림차순 정렬
+        //확률 높은 박스 순서대로  내림차순 정렬
         candidates.Sort((a, b) => b.confidence.CompareTo(a.confidence));
 
         List<DetectedObject> finalObjects = new List<DetectedObject>();
 
-        // [C-2] NMS (겹침 제거)
+        //NMS로 겹치는 박스들 제거
         foreach (var candidate in candidates)
         {
             bool isOverlap = false;

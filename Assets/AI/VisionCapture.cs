@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using Unity.Collections;
 using System.Collections.Generic;
-using Unity.InferenceEngine; // 💡 정확한 최신 네임스페이스 적용
+using Unity.InferenceEngine;
 
 public class VisionCapture : MonoBehaviour
 {
@@ -79,14 +79,8 @@ public class VisionCapture : MonoBehaviour
         // 워커의 출력값(텐서)
         Tensor<float> outputTensor = worker.PeekOutput() as Tensor<float>;
 
-        // ---------------------------------------------------------
-        // [C-1 & C-2] 데이터 파싱 및 NMS 처리
-        // ---------------------------------------------------------
         List<DetectedObject> detectedObjects = YoloParser.ParseAndNMS(outputTensor, confThreshold: 0.25f, iouThreshold: 0.45f);
 
-        // ---------------------------------------------------------
-        // [C-3] 화면 비율에 맞게 좌표 뻥튀기 및 로그 출력
-        // ---------------------------------------------------------
         float scaleX = (float)Screen.width / 224f;
         float scaleY = (float)Screen.height / 224f;
 
