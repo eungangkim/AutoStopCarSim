@@ -10,9 +10,13 @@ public class DatasetGenerator : MonoBehaviour
     [Header("References")]
     public Transform carTransform;
     public Camera captureCamera;
-    public GameObject pedestrianPrefab;
+    public GameObject[] pedestrianPrefabs;
     public TMP_InputField pedestrianCountInput;
+
     public TMP_InputField bulkCountInput;
+    [Header("Camera Spawn Offset")]
+    public float cameraHeight = 1.3f;
+    public float cameraPitch = 0f;
 
     [Header("Car Random Spawn Settings")]
     public Transform carSpawnPointParent;
@@ -72,10 +76,41 @@ public class DatasetGenerator : MonoBehaviour
 
         originalCameraRotation = captureCamera.transform.localRotation;
 
+        captureIndex = GetNextCaptureIndex();
         LoadCarSpawnPoints();
+        
         Debug.Log("Dataset 저장 경로: " + root);
+        Debug.Log($"다음 캡쳐 번호: {captureIndex:D6}");
     }
+    private int GetNextCaptureIndex()
+    {
+        if (!Directory.Exists(imageFolder))
+        {
+            return 1;
+        }
 
+        string[] files = Directory.GetFiles(imageFolder, "input_*.png");
+
+        int maxIndex = 0;
+
+        foreach (string file in files)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(file);
+            // 예: input_000123
+
+            string numberPart = fileName.Replace("input_", "");
+
+            if (int.TryParse(numberPart, out int index))
+            {
+                if (index > maxIndex)
+                {
+                    maxIndex = index;
+                }
+            }
+        }
+
+        return maxIndex + 1;
+    }
     public void SpawnPedestrians()
     {
         ClearPedestrians();
@@ -91,10 +126,21 @@ public class DatasetGenerator : MonoBehaviour
 
     private void SpawnRandomPedestrians(int count)
     {
+        if (pedestrianPrefabs == null || pedestrianPrefabs.Length == 0)
+        {
+            Debug.LogWarning("Pedestrian Prefabs가 설정되지 않았습니다.");
+            return;
+        }
+
         for (int i = 0; i < count; i++)
         {
-            Vector3 forward = carTransform.forward;
-            Vector3 right = carTransform.right;
+            Vector3 forward = captureCamera.transform.forward;
+            forward.y = 0f;
+            forward.Normalize();
+
+            Vector3 right = captureCamera.transform.right;
+            right.y = 0f;
+            right.Normalize();
 
             float forwardDistance = Random.Range(minForwardDistance, maxForwardDistance);
             float horizontalOffset = Random.Range(-horizontalRange, horizontalRange);
@@ -106,8 +152,12 @@ public class DatasetGenerator : MonoBehaviour
 
             spawnPos.y = spawnHeight;
 
+            GameObject selectedPrefab = pedestrianPrefabs[
+                Random.Range(0, pedestrianPrefabs.Length)
+            ];
+
             GameObject pedestrian = Instantiate(
-                pedestrianPrefab,
+                selectedPrefab,
                 spawnPos,
                 Quaternion.identity
             );
@@ -115,6 +165,8 @@ public class DatasetGenerator : MonoBehaviour
             RandomizePedestrianRotation(pedestrian);
 
             spawnedPedestrians.Add(pedestrian);
+
+            Debug.Log($"보행자 생성: {pedestrian.name}, 위치: {spawnPos}");
         }
     }
 
@@ -226,26 +278,26 @@ public class DatasetGenerator : MonoBehaviour
         Debug.Log($"대량 데이터 생성 완료: {bulkCount}개");
     }
 
-    private void RandomizeCarPosition()
+    private bool RandomizeCarPosition()
     {
         if (carSpawnPoints == null || carSpawnPoints.Length == 0)
         {
             Debug.LogWarning("Car Spawn Points가 설정되지 않았습니다.");
-            return;
+            return false;
         }
 
         Transform selectedPoint = carSpawnPoints[Random.Range(0, carSpawnPoints.Length)];
 
-        Vector3 randomOffset = new Vector3(
-            Random.Range(-carPositionRandomOffset, carPositionRandomOffset),
-            0f,
-            Random.Range(-carPositionRandomOffset, carPositionRandomOffset)
-        );
+        Vector3 cameraPos = selectedPoint.position + Vector3.up * cameraHeight;
 
-        carTransform.position = selectedPoint.position + randomOffset;
+        carTransform.position = cameraPos;
+        carTransform.rotation = selectedPoint.rotation * Quaternion.Euler(cameraPitch, 0f, 0f);
 
-        float randomYaw = Random.Range(-carYawRandomOffset, carYawRandomOffset);
-        carTransform.rotation = selectedPoint.rotation * Quaternion.Euler(0f, randomYaw, 0f);
+        Physics.SyncTransforms();
+
+        Debug.Log($"카메라 이동: {selectedPoint.name}, 위치: {cameraPos}");
+
+        return true;
     }
 
     private void RandomizeCameraRotation()
@@ -429,18 +481,34 @@ public class DatasetGenerator : MonoBehaviour
 
         foreach (BoundingBoxData box in boxes)
         {
-            float centerX = (box.xMin + box.xMax) / 2f;
-            float centerY = (box.yMin + box.yMax) / 2f;
-            float width = box.xMax - box.xMin;
-            float height = box.yMax - box.yMin;
-
-            string line = $"{box.classId} {centerX:F6} {centerY:F6} {width:F6} {height:F6}";
+            string line = ConvertToYoloFormat(box);
             lines.Add(line);
         }
 
         File.WriteAllLines(path, lines);
     }
+    private string ConvertToYoloFormat(BoundingBoxData box)
+    {
+        float xMin = Mathf.Clamp01(box.xMin);
+        float yMin = Mathf.Clamp01(box.yMin);
+        float xMax = Mathf.Clamp01(box.xMax);
+        float yMax = Mathf.Clamp01(box.yMax);
 
+        float centerX = (xMin + xMax) / 2f;
+
+        // Unity Viewport는 아래가 0, YOLO/이미지는 위가 0이므로 Y축 반전
+        float centerY = 1f - ((yMin + yMax) / 2f);
+
+        float width = xMax - xMin;
+        float height = yMax - yMin;
+
+        centerX = Mathf.Clamp01(centerX);
+        centerY = Mathf.Clamp01(centerY);
+        width = Mathf.Clamp01(width);
+        height = Mathf.Clamp01(height);
+
+        return $"{box.classId} {centerX:F6} {centerY:F6} {width:F6} {height:F6}";
+    }
     private class BoundingBoxData
     {
         public int classId;
