@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class DatasetGenerator : MonoBehaviour
 {
@@ -11,26 +12,51 @@ public class DatasetGenerator : MonoBehaviour
     public Camera captureCamera;
     public GameObject pedestrianPrefab;
     public TMP_InputField pedestrianCountInput;
+    public TMP_InputField bulkCountInput;
 
-    [Header("Spawn Settings")]
+    [Header("Car Random Spawn Settings")]
+    public Transform carSpawnPointParent;
+    public Transform[] carSpawnPoints;
+    public float carPositionRandomOffset = 1.5f;
+    public float carYawRandomOffset = 10f;
+
+    [Header("Pedestrian Count Random Settings")]
+    public int minPedestrianCount = 1;
+    public int maxPedestrianCount = 5;
+
+    [Header("Pedestrian Spawn Settings")]
     public float minForwardDistance = 10f;
     public float maxForwardDistance = 40f;
     public float horizontalRange = 5f;
     public float spawnHeight = 0f;
 
+    [Header("Camera Random Settings")]
+    public bool useCameraRandomRotation = false;
+    public float cameraYawRandomOffset = 0f;
+    public float cameraPitchRandomOffset = 1f;
+
+    [Header("Light Random Settings")]
+    public Light directionalLight;
+    public bool useLightRandom = true;
+    public float minLightIntensity = 0.7f;
+    public float maxLightIntensity = 1.4f;
+
     [Header("Capture Settings")]
-    public int imageWidth = 1280;
-    public int imageHeight = 720;
+    public int imageWidth = 1920;
+    public int imageHeight = 1080;
 
     [Header("Dataset Settings")]
     public string datasetFolderName = "Dataset";
 
     private readonly List<GameObject> spawnedPedestrians = new List<GameObject>();
+
     private int captureIndex = 1;
 
     private string imageFolder;
     private string boxedFolder;
     private string labelFolder;
+
+    private Quaternion originalCameraRotation;
 
     private void Start()
     {
@@ -43,6 +69,11 @@ public class DatasetGenerator : MonoBehaviour
         Directory.CreateDirectory(imageFolder);
         Directory.CreateDirectory(boxedFolder);
         Directory.CreateDirectory(labelFolder);
+
+        originalCameraRotation = captureCamera.transform.localRotation;
+
+        LoadCarSpawnPoints();
+        Debug.Log("Dataset 저장 경로: " + root);
     }
 
     public void SpawnPedestrians()
@@ -55,6 +86,11 @@ public class DatasetGenerator : MonoBehaviour
             return;
         }
 
+        SpawnRandomPedestrians(count);
+    }
+
+    private void SpawnRandomPedestrians(int count)
+    {
         for (int i = 0; i < count; i++)
         {
             Vector3 forward = carTransform.forward;
@@ -76,7 +112,19 @@ public class DatasetGenerator : MonoBehaviour
                 Quaternion.identity
             );
 
-            // 보행자가 자동차 쪽을 바라보도록 회전
+            RandomizePedestrianRotation(pedestrian);
+
+            spawnedPedestrians.Add(pedestrian);
+        }
+    }
+
+    private void RandomizePedestrianRotation(GameObject pedestrian)
+    {
+        int mode = Random.Range(0, 4);
+
+        if (mode == 0)
+        {
+            // 자동차 쪽 바라보기
             Vector3 lookDir = carTransform.position - pedestrian.transform.position;
             lookDir.y = 0f;
 
@@ -84,11 +132,13 @@ public class DatasetGenerator : MonoBehaviour
             {
                 pedestrian.transform.rotation = Quaternion.LookRotation(lookDir);
             }
-
-            spawnedPedestrians.Add(pedestrian);
         }
-
-        Debug.Log($"{count}명의 보행자를 생성했습니다.");
+        else
+        {
+            // 아무 방향 바라보기
+            float randomY = Random.Range(0f, 360f);
+            pedestrian.transform.rotation = Quaternion.Euler(0f, randomY, 0f);
+        }
     }
 
     public void ClearPedestrians()
@@ -124,14 +174,107 @@ public class DatasetGenerator : MonoBehaviour
 
         File.WriteAllBytes(inputPath, inputImage.EncodeToPNG());
         File.WriteAllBytes(boxedPath, boxedImage.EncodeToPNG());
-        SaveYoloLabels(labelPath, boxes, inputImage.width, inputImage.height);
+        SaveYoloLabels(labelPath, boxes);
 
-        Debug.Log($"데이터 저장 완료: {fileNumber}");
+        Debug.Log($"데이터 저장 완료: {fileNumber}, 객체 수: {boxes.Count}");
 
         Destroy(inputImage);
         Destroy(boxedImage);
 
         captureIndex++;
+    }
+
+    public void GenerateBulkDataset()
+    {
+        if (!int.TryParse(bulkCountInput.text, out int bulkCount))
+        {
+            Debug.LogWarning("생성할 데이터 개수를 숫자로 입력하세요.");
+            return;
+        }
+
+        StartCoroutine(BulkGenerateCoroutine(bulkCount));
+    }
+
+    private IEnumerator BulkGenerateCoroutine(int bulkCount)
+    {
+        for (int i = 0; i < bulkCount; i++)
+        {
+            ClearPedestrians();
+
+            RandomizeCarPosition();
+            RandomizeCameraRotation();
+            RandomizeLight();
+
+            int pedestrianCount = Random.Range(minPedestrianCount, maxPedestrianCount + 1);
+            SpawnRandomPedestrians(pedestrianCount);
+
+            // 오브젝트 생성 및 위치 변경이 반영되도록 한 프레임 대기
+            yield return null;
+
+            CaptureDataset();
+
+            if ((i + 1) % 100 == 0)
+            {
+                Debug.Log($"{i + 1}/{bulkCount}개 데이터 생성 완료");
+            }
+
+            yield return null;
+        }
+
+        ResetCameraRotation();
+
+        Debug.Log($"대량 데이터 생성 완료: {bulkCount}개");
+    }
+
+    private void RandomizeCarPosition()
+    {
+        if (carSpawnPoints == null || carSpawnPoints.Length == 0)
+        {
+            Debug.LogWarning("Car Spawn Points가 설정되지 않았습니다.");
+            return;
+        }
+
+        Transform selectedPoint = carSpawnPoints[Random.Range(0, carSpawnPoints.Length)];
+
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-carPositionRandomOffset, carPositionRandomOffset),
+            0f,
+            Random.Range(-carPositionRandomOffset, carPositionRandomOffset)
+        );
+
+        carTransform.position = selectedPoint.position + randomOffset;
+
+        float randomYaw = Random.Range(-carYawRandomOffset, carYawRandomOffset);
+        carTransform.rotation = selectedPoint.rotation * Quaternion.Euler(0f, randomYaw, 0f);
+    }
+
+    private void RandomizeCameraRotation()
+    {
+        if (!useCameraRandomRotation) return;
+
+        float randomYaw = Random.Range(-cameraYawRandomOffset, cameraYawRandomOffset);
+        float randomPitch = Random.Range(-cameraPitchRandomOffset, cameraPitchRandomOffset);
+
+        captureCamera.transform.localRotation =
+            originalCameraRotation * Quaternion.Euler(randomPitch, randomYaw, 0f);
+    }
+
+    private void ResetCameraRotation()
+    {
+        captureCamera.transform.localRotation = originalCameraRotation;
+    }
+
+    private void RandomizeLight()
+    {
+        if (!useLightRandom) return;
+        if (directionalLight == null) return;
+
+        directionalLight.intensity = Random.Range(minLightIntensity, maxLightIntensity);
+
+        float randomX = Random.Range(30f, 70f);
+        float randomY = Random.Range(0f, 360f);
+
+        directionalLight.transform.rotation = Quaternion.Euler(randomX, randomY, 0f);
     }
 
     private Texture2D CaptureCameraImage()
@@ -169,7 +312,6 @@ public class DatasetGenerator : MonoBehaviour
             if (datasetObject == null || renderer == null) continue;
 
             Bounds bounds = renderer.bounds;
-
             Vector3[] corners = GetBoundsCorners(bounds);
 
             float minX = float.MaxValue;
@@ -246,7 +388,6 @@ public class DatasetGenerator : MonoBehaviour
             int xMin = Mathf.RoundToInt(box.xMin * image.width);
             int xMax = Mathf.RoundToInt(box.xMax * image.width);
 
-            // Unity viewport y는 아래가 0, 이미지 픽셀도 아래가 0 기준이라 그대로 사용
             int yMin = Mathf.RoundToInt(box.yMin * image.height);
             int yMax = Mathf.RoundToInt(box.yMax * image.height);
 
@@ -282,7 +423,7 @@ public class DatasetGenerator : MonoBehaviour
         image.SetPixel(x, y, color);
     }
 
-    private void SaveYoloLabels(string path, List<BoundingBoxData> boxes, int imageWidth, int imageHeight)
+    private void SaveYoloLabels(string path, List<BoundingBoxData> boxes)
     {
         List<string> lines = new List<string>();
 
@@ -293,8 +434,6 @@ public class DatasetGenerator : MonoBehaviour
             float width = box.xMax - box.xMin;
             float height = box.yMax - box.yMin;
 
-            // YOLO는 보통 y축도 0~1 정규화 좌표를 사용한다.
-            // 이 구조에서는 캡쳐 이미지와 viewport 기준이 동일하게 저장되므로 그대로 사용한다.
             string line = $"{box.classId} {centerX:F6} {centerY:F6} {width:F6} {height:F6}";
             lines.Add(line);
         }
@@ -310,4 +449,33 @@ public class DatasetGenerator : MonoBehaviour
         public float xMax;
         public float yMax;
     }
+
+    private void LoadCarSpawnPoints()
+    {
+        if (carSpawnPointParent == null)
+        {
+            Debug.LogWarning("Car Spawn Point Parent가 설정되지 않았습니다.");
+            return;
+        }
+
+        List<Transform> spawnPointList = new List<Transform>();
+
+        Transform[] allChildren = carSpawnPointParent.GetComponentsInChildren<Transform>();
+
+        foreach (Transform child in allChildren)
+        {
+            if (child == carSpawnPointParent)
+                continue;
+
+            if (child.name.StartsWith("SpawnPoint"))
+            {
+                spawnPointList.Add(child);
+            }
+        }
+
+        carSpawnPoints = spawnPointList.ToArray();
+
+        Debug.Log($"Car Spawn Point {carSpawnPoints.Length}개 자동 등록 완료");
+    }
 }
+
