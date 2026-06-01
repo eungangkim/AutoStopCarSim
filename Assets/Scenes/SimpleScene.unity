@@ -3411,7 +3411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VisionCapture
   visionCamera: {fileID: 2125660900}
   captureInterval: 0.5
-  yoloModelAsset: {fileID: 5022602860645237092, guid: cdc74d7c8cbe9ee40b6e508315d9be47, type: 3}
+  yoloModelAsset: {fileID: 5022602860645237092, guid: 9dcc705e16b311c4bbb4bbb9e6a18575, type: 3}
 --- !u!4 &1197677084
 Transform:
   m_ObjectHideFlags: 0
