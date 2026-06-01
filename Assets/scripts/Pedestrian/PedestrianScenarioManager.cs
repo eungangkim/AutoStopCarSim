@@ -22,7 +22,7 @@ public class PedestrianScenarioManager : MonoBehaviour
     {
         distanceInput.text = "30";
         selectedPedestrian = pedestrian30m;
-
+        SelectDistance();
         Debug.Log("기본값: 30m 사람 선택됨");
     }
     public void SelectDistance()

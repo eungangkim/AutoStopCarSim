@@ -3,15 +3,20 @@ using UnityEngine.Rendering;
 using Unity.Collections;
 using System.Collections.Generic;
 using Unity.InferenceEngine;
+using System.Collections.Generic;
 
 public class VisionCapture : MonoBehaviour
 {
+    public PrometeoCarController carController;
     [Header("카메라 설정")]
     public Camera visionCamera;
     public float captureInterval = 0.5f;
 
     [Header("AI 모델 설정")]
     public ModelAsset yoloModelAsset;
+
+    [Header("Detection Result")]
+    public List<VisionDetection> latestDetections = new List<VisionDetection>();
 
     private float timer = 0f;
     private Texture2D resultTexture;
@@ -78,7 +83,8 @@ public class VisionCapture : MonoBehaviour
 
         // 워커의 출력값(텐서)
         Tensor<float> outputTensor = worker.PeekOutput() as Tensor<float>;
-
+        
+        latestDetections.Clear();
         List<DetectedObject> detectedObjects = YoloParser.ParseAndNMS(outputTensor, confThreshold: 0.25f, iouThreshold: 0.45f);
 
         float scaleX = (float)Screen.width / 224f;
@@ -94,10 +100,22 @@ public class VisionCapture : MonoBehaviour
                 float screenY = obj.boundingBox.yMin * scaleY;
                 float screenW = obj.boundingBox.width * scaleX;
                 float screenH = obj.boundingBox.height * scaleY;
-
+                latestDetections.Add(new VisionDetection(
+                    obj.classID,
+                    obj.confidence,
+                    screenX,
+                    screenY,
+                    screenW,
+                    screenH
+                ));
                 Debug.Log($"🎯 [클래스 {obj.classID}] 확률: {obj.confidence * 100:F1}% | " +
                           $"위치(X:{screenX:F0}, Y:{screenY:F0}) 크기(W:{screenW:F0}, H:{screenH:F0})");
             }
+            //carController.isAuto=true;
+        }
+        else
+        {
+            //carController.isAuto=false;
         }
     }
 
@@ -109,5 +127,15 @@ public class VisionCapture : MonoBehaviour
         }
 
         worker?.Dispose();
+    }
+
+    public bool HasDetection
+    {
+        get { return latestDetections != null && latestDetections.Count > 0; }
+    }
+
+    public IReadOnlyList<VisionDetection> LatestDetections
+    {
+        get { return latestDetections; }
     }
 }

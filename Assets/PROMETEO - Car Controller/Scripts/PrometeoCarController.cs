@@ -12,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class PrometeoCarController : MonoBehaviour
@@ -167,7 +168,20 @@ public class PrometeoCarController : MonoBehaviour
   public float LocalVelocityX => localVelocityX;
   public float LocalVelocityZ => localVelocityZ;
 
-  
+  public bool isAuto;
+
+  // Variables
+  private Vector3 MoveForce;
+
+  // Input System
+  private InputAction moveAction;
+  private Vector2 moveInput;
+
+  // Auto input
+  private float autoSteerInput = 0f;
+  private float autoAccelInput = 0f;
+  private bool autoBrakeInput = false;
+
   // Start is called before the first frame update
   void Start()
   {
@@ -315,7 +329,11 @@ public class PrometeoCarController : MonoBehaviour
     In this part of the code we specify what the car needs to do if the user presses W (throttle), S (reverse),
     A (turn left), D (turn right) or Space bar (handbrake).
     */
-    if (useTouchControls && touchControlsSetup)
+    if (isAuto)
+    {
+      ApplyAIInput();
+    }
+    else if (useTouchControls && touchControlsSetup)
     {
 
       if (throttlePTI.buttonPressed)
@@ -917,5 +935,19 @@ public class PrometeoCarController : MonoBehaviour
       driftingAxis = 0f;
     }
   }
-
+  private void ApplyAIInput()
+  {
+    if (autoBrakeInput)
+    {
+      CancelInvoke("DecelerateCar");
+      deceleratingCar = false;
+      Brakes();
+    }
+  }
+  public void SetInput(float accel, float steer, bool brake)
+  {
+    autoAccelInput = Mathf.Clamp(accel, -1f, 1f);
+    autoSteerInput = Mathf.Clamp(steer, -1f, 1f);
+    autoBrakeInput = brake;
+  }
 }
