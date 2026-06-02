@@ -22,6 +22,7 @@ public class CarController : MonoBehaviour
     // Auto input
     private float autoSteerInput = 0f;
     private float autoAccelInput = 0f;
+    private bool autoBrakeInput = false;
 
     void Awake()
     {
@@ -57,7 +58,12 @@ public class CarController : MonoBehaviour
         autoAccelInput = Mathf.Clamp(accel, -1f, 1f);
         autoSteerInput = Mathf.Clamp(steer, -1f, 1f);
     }
-
+    public void SetInput(float accel, float steer, bool brake)
+    {
+        autoAccelInput = Mathf.Clamp(accel, -1f, 1f);
+        autoSteerInput = Mathf.Clamp(steer, -1f, 1f);
+        autoBrakeInput = brake;
+    }
     void FixedUpdate()
     {
         float steerInput;
@@ -75,14 +81,26 @@ public class CarController : MonoBehaviour
             accelInput = moveInput.y;
         }
 
-        MoveForce += transform.forward * MoveSpeed * accelInput * Time.fixedDeltaTime;
+        if (autoBrakeInput && isAuto)
+        {
+            MoveForce = Vector3.Lerp(MoveForce, Vector3.zero, Time.fixedDeltaTime * 10f);
+
+            if (MoveForce.magnitude < 0.05f)
+            {
+                MoveForce = Vector3.zero;
+            }
+        }
+        else
+        {
+            MoveForce += transform.forward * MoveSpeed * accelInput * Time.fixedDeltaTime;
+        }
+
         transform.position += MoveForce * Time.fixedDeltaTime;
 
         transform.Rotate(Vector3.up * steerInput * MoveForce.magnitude * SteerAngle * Time.fixedDeltaTime);
 
         MoveForce *= Drag;
         MoveForce = Vector3.ClampMagnitude(MoveForce, MaxSpeed);
-
         Debug.DrawRay(transform.position, MoveForce.normalized * 3f, Color.red);
         Debug.DrawRay(transform.position, transform.forward * 3f, Color.blue);
 
