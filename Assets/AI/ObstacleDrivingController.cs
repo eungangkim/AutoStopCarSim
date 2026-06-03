@@ -7,6 +7,7 @@ public class ObstacleDrivingController : MonoBehaviour
         Cruise,
         SlowDown,
         Stop,
+        Crawl,
         WaitClear,
         Restart
     }
@@ -30,20 +31,20 @@ public class ObstacleDrivingController : MonoBehaviour
 
     [Header("Distance Thresholds")]
     [Tooltip("이 거리보다 멀면 정상 주행")]
-    public float cruiseDistance = 20f;
+    public float cruiseDistance = 35f;
 
     [Tooltip("이 거리 아래부터 감속")]
-    public float slowDownDistance = 15f;
+    public float slowDownDistance = 30f;
 
     [Tooltip("이 거리 아래부터 매우 천천히 접근")]
-    public float crawlDistance = 8f;
+    public float crawlDistance = 15f;
 
     [Tooltip("이 거리 아래면 정지")]
-    public float stopDistance = 5f;
+    public float stopDistance = 9f;
 
     [Header("Restart")]
     [Tooltip("장애물이 사라진 뒤 이 시간만큼 기다렸다가 재출발")]
-    public float clearWaitTime = 1.5f;
+    public float clearWaitTime = 15f;
 
     [Tooltip("재출발 시 서서히 가속되는 정도")]
     public float throttleSmoothSpeed = 2.5f;
@@ -95,6 +96,8 @@ public class ObstacleDrivingController : MonoBehaviour
                 currentState = DrivingState.WaitClear;
                 clearTimer += Time.deltaTime;
 
+                carController.isAuto = true;
+
                 if (clearTimer >= clearWaitTime)
                 {
                     currentState = DrivingState.Restart;
@@ -104,12 +107,13 @@ public class ObstacleDrivingController : MonoBehaviour
             else if (currentState == DrivingState.Restart)
             {
                 currentState = DrivingState.Cruise;
+                carController.isAuto = false;
             }
             else
             {
                 currentState = DrivingState.Cruise;
+                carController.isAuto = false;
             }
-            carController.isAuto = false;
 
             return;
         }
@@ -146,14 +150,11 @@ public class ObstacleDrivingController : MonoBehaviour
                 break;
 
             case DrivingState.SlowDown:
-                if (currentDistance <= crawlDistance)
-                {
-                    targetThrottle = crawlThrottle;
-                }
-                else
-                {
-                    targetThrottle = slowThrottle;
-                }
+                targetThrottle = slowThrottle;
+                break;
+
+            case DrivingState.Crawl:
+                targetThrottle = crawlThrottle;
                 break;
 
             case DrivingState.Stop:
