@@ -24,11 +24,18 @@ public class ObstacleDistanceEstimator : MonoBehaviour
     [Header("Bounding Box Coordinate Mode")]
     [Tooltip("true면 detection.x, detection.y를 박스 중심 좌표로 봄. false면 좌상단 좌표로 봄.")]
     public bool bboxXYIsCenter = false;
+    [Header("Box Height Distance Estimation")]
+    public bool useBoxHeightDistance = true;
 
+    [Tooltip("bbox 높이 기반 거리 스케일")]
+    public float boxHeightDistanceScale = 3000f;
+
+    [Tooltip("거리 보정값")]
+    public float boxHeightDistanceOffset = 0f;
     [Header("Bottom Edge Distance Estimation")]
     [Tooltip("이미지 하단과 박스 하단 사이의 픽셀 거리 1px당 몇 m로 볼지")]
-    public float bottomGapToMeterScale = 0.02f;
-
+    public float bottomGapScale = 0.01f;
+    public float bottomGapExponent = 1.4f;
     [Tooltip("거리 보정값. 전체 거리가 너무 작거나 크면 조절")]
     public float bottomGapDistanceOffset = 0f;
 
@@ -110,13 +117,21 @@ public class ObstacleDistanceEstimator : MonoBehaviour
             float boxBottomY = GetBoxBottomY(detection);
             float bottomGapPixel = imageHeight - boxBottomY;
 
-            Debug.Log(bottomGapPixel);
             if (bottomGapPixel < 0f)
             {
                 bottomGapPixel = 0f;
             }
 
-            float distance = EstimateDistanceFromBottomGap(bottomGapPixel);
+            float distance;
+
+            if (useBoxHeightDistance)
+            {
+                distance = EstimateDistanceFromBoxHeight(detection);
+            }
+            else
+            {
+                distance = EstimateDistanceFromBottomGap(bottomGapPixel);
+            }
             Debug.Log(distance);
             float boxCenterX = GetBoxCenterX(detection);
             float horizontalAngle = EstimateHorizontalAngle(boxCenterX);
@@ -170,10 +185,19 @@ public class ObstacleDistanceEstimator : MonoBehaviour
 
         return detection.x + detection.width * 0.5f;
     }
+    private float EstimateDistanceFromBoxHeight(VisionDetection detection)
+    {
+        float h = Mathf.Max(detection.height, 1f);
 
+        float distance = boxHeightDistanceScale / h + boxHeightDistanceOffset;
+
+        return Mathf.Clamp(distance, minEstimatedDistance, maxEstimatedDistance);
+    }
     private float EstimateDistanceFromBottomGap(float bottomGapPixel)
     {
-        float distance = bottomGapPixel * bottomGapToMeterScale + bottomGapDistanceOffset;
+        float distance =
+            Mathf.Pow(bottomGapPixel, bottomGapExponent) * bottomGapScale
+            + bottomGapDistanceOffset;
 
         return Mathf.Clamp(distance, minEstimatedDistance, maxEstimatedDistance);
     }

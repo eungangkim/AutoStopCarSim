@@ -935,13 +935,47 @@ public class PrometeoCarController : MonoBehaviour
       driftingAxis = 0f;
     }
   }
+
   private void ApplyAIInput()
   {
     if (autoBrakeInput)
     {
       CancelInvoke("DecelerateCar");
       deceleratingCar = false;
+      ThrottleOff();
       Brakes();
+      return;
+    }
+
+    if (autoAccelInput > 0.05f)
+    {
+      CancelInvoke("DecelerateCar");
+      deceleratingCar = false;
+
+      GoForward();
+    }
+    else
+    {
+      ThrottleOff();
+
+      if (!deceleratingCar)
+      {
+        InvokeRepeating("DecelerateCar", 0f, 0.1f);
+        deceleratingCar = true;
+      }
+    }
+
+    if (autoSteerInput < -0.05f)
+    {
+      TurnLeft();
+    }
+    else if (autoSteerInput > 0.05f)
+    {
+      TurnRight();
+    }
+    else if (steeringAxis != 0f)
+    {
+      ResetSteeringAngle();
     }
   }
   public void SetInput(float accel, float steer, bool brake)
